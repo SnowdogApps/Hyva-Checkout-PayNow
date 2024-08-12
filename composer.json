@@ -1,0 +1,16 @@
+{
+	"name": "snowdog/module-hyva-checkout-paynow",
+	"description": "Hyva Checkout compatibility module for PayNow",
+	"type": "magento2-module",
+	"require": {
+		"pay-now/paynow-magento2": "*"
+	},
+	"autoload": {
+		"files": [
+			"src/registration.php"
+		],
+		"psr-4": {
+			"Snowdog\\Hyva\\Checkout\\PayNow\\": "src"
+		}
+	}
+}
