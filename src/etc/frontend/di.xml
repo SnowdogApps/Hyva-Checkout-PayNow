@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
+        <arguments>
+            <argument name="placeOrderServiceList" xsi:type="array">
+                <item name="paynow_gateway"
+                      xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
+                </item>
+                <item name="paynow_blik_gateway"
+                      xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
+                </item>
+                <item name="paynow_pbl_gateway"
+                      xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
+                </item>
+                <item name="paynow_card_gateway"
+                      xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
+                </item>
+                <item name="paynow_digital_wallet_gateway"
+                      xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Quote\Api\PaymentMethodManagementInterface">
+        <plugin name="paynow_payment_methods_filter" type="Snowdog\Hyva\Checkout\PayNow\Plugin\AvailableMethodsFilterPlugin"/>
+    </type>
+    <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
+        <arguments>
+            <argument name="compatModules" xsi:type="array">
+                <item name="hyva-magento2-snowdog-paynow" xsi:type="array">
+                    <item name="original_module" xsi:type="string">Paynow_PaymentGateway</item>
+                    <item name="compat_module" xsi:type="string">Snowdog_HyvaCheckoutPayNow</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

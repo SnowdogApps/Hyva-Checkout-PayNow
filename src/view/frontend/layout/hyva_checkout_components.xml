@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceBlock name="checkout.payment.methods">
+            <block name="checkout.payment.method.paynow_gateway"
+                   as="paynow_gateway"
+                   template="Snowdog_HyvaCheckoutPayNow::component/payment/method/gateway.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Snowdog\Hyva\Checkout\PayNow\Payment\Method\Gateway
+                    </argument>
+                    <argument name="metadata" xsi:type="array">
+                        <item name="title" xsi:type="string">Test</item>
+                        <item name="subtitle" xsi:type="string" translate="true">
+                            Pay with PayNow quick bank transfer
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+            <block name="checkout.payment.method.paynow_blik_gateway"
+                   as="paynow_blik_gateway"
+                   template="Snowdog_HyvaCheckoutPayNow::component/payment/method/blik.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Snowdog\Hyva\Checkout\PayNow\Payment\Method\Blik
+                    </argument>
+                    <argument name="metadata" xsi:type="array">
+                        <item name="subtitle" xsi:type="string" translate="true">
+                            Pay with BLIK
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+            <block name="checkout.payment.method.paynow_pbl_gateway"
+                   as="paynow_pbl_gateway"
+                   template="Snowdog_HyvaCheckoutPayNow::component/payment/method/gateway.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Snowdog\Hyva\Checkout\PayNow\Payment\Method\Gateway
+                    </argument>
+                    <argument name="metadata" xsi:type="array">
+                        <item name="subtitle" xsi:type="string" translate="true">
+                            Pay with PayNow quick bank transfer
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+            <block name="checkout.payment.method.paynow_card_gateway"
+                   as="paynow_card_gateway"
+                   template="Snowdog_HyvaCheckoutPayNow::component/payment/method/card.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Snowdog\Hyva\Checkout\PayNow\Payment\Method\Card
+                    </argument>
+                    <argument name="metadata" xsi:type="array">
+                        <item name="subtitle" xsi:type="string" translate="true">
+                            Pay with a card
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+            <block name="checkout.payment.method.paynow_digital_wallet_gateway"
+                   as="paynow_digital_wallet_gateway"
+                   template="Snowdog_HyvaCheckoutPayNow::component/payment/method/digital_wallet.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Snowdog\Hyva\Checkout\PayNow\Payment\Method\DigitalWallet
+                    </argument>
+                    <argument name="metadata" xsi:type="array">
+                        <item name="subtitle" xsi:type="string" translate="true">
+                            Pay with a digital wallet
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

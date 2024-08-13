@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var Blik $magewire */
+
+/** @var Php $this */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\TemplateEngine\Php;
+use Snowdog\Hyva\Checkout\PayNow\Payment\Method\Blik;
+
+?>
+<div class="payment-method">
+    <div class="paynow-payment-option-blik">
+        <label for="paynow_blik_code">
+            <span><?= __('Enter the BLIK code') ?></span>
+        </label>
+        <input autocomplete="off" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" size="6"
+               id="paynow_blik_code" name="blikCode" type="text" placeholder="___ ___" class="required form-control"
+               wire:model.lazy="blikCode"/>
+    </div>
+
+    <div class="paynow-data-processing-info">
+        <?php foreach ($magewire->getGdprNotices() as $notice): ?>
+            <div class="paynow-data-processing-info" x-data="{ expanded: false }">
+                <span><?= $notice['title'] ?></span>
+                <?php if ($notice['content']): ?>
+                    <a class="expand" @click="expanded = ! expanded"><?= __('Read more') ?></a>
+                    <div x-show="expanded" class="paynow-data-processing-info-more">
+                        <p><?= $notice['content'] ?></p>
+                    </div>
+                <?php endif ?>
+            </div>
+        <?php endforeach ?>
+    </div>
+</div>

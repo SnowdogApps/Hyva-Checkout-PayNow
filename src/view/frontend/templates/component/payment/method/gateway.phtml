@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var Gateway $magewire */
+
+/** @var Php $this */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\TemplateEngine\Php;
+use Snowdog\Hyva\Checkout\PayNow\Payment\Method\Gateway;
+
+?>
+<div class="payment-method">
+
+    <div class="paynow-payment-options">
+        <span><?= __('Choose payment method:') ?></span>
+        <div>
+            <?php foreach ($magewire->getMethods() as $method): ?>
+                <div class="paynow-payment-option <?php if (!$method['enabled']): ?>disabled<?php endif ?> <?php if ($magewire->method == $method['id']): ?>active<?php endif ?>" wire:click="$set('method', '<?= $method['id'] ?>')">
+                    <div>
+                        <img src="<?= $method['image'] ?>" alt="<?= $method['description'] ?>"/>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
+    </div>
+
+    <div class="paynow-data-processing-info">
+        <?php foreach ($magewire->getGdprNotices() as $notice): ?>
+            <div class="paynow-data-processing-info" x-data="{ expanded: false }">
+                <span><?= $notice['title'] ?></span>
+                <?php if ($notice['content']): ?>
+                    <a class="expand" @click="expanded = ! expanded"><?= __('Read more') ?></a>
+                    <div x-show="expanded" class="paynow-data-processing-info-more">
+                        <p><?= $notice['content'] ?></p>
+                    </div>
+                <?php endif ?>
+            </div>
+        <?php endforeach ?>
+    </div>
+</div>

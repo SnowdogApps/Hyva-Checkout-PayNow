@@ -1,0 +1,41 @@
+<?php
+/** @var Paynow\PaymentGateway\Block\Payment\Confirm $block */
+?>
+<div class="paynow-confirm-blik">
+    <p class="headline"><?= $block->escapeHtml(__('Confirm the payment using the app on your phone.')) ?></p>
+    <img src="<?= $block->escapeUrl($block->getConfirmBlikImageUrl()); ?>" alt="">
+    <div>
+        <p>
+            <?= $block->escapeHtml(__('Your payment ID: ')) ?>
+            <span>
+                <?= $block->escapeHtml($block->getPaymentId()) ?>
+            </span>
+        </p>
+        <p>
+            <?= $block->escapeHtml(__('Current payment status: ')) ?>
+            <span class="status" id="paynow_blik_status">
+                <?= $block->escapeHtml($block->getPaymentStatusLabel()); ?>
+            </span>
+        </p>
+    </div>
+</div>
+
+<script>
+    setInterval(function () {
+        fetch('<?= $block->getUrl('paynow/payment/status') ?>', {
+            method: 'GET'
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                console.log(json);
+                document.getElementById('paynow_blik_status').innerText = json.payment_status_label;
+                if (!["PENDING", "NEW"].includes(json.payment_status)) {
+                    window.location.replace('<?= $block->getUrl(
+                        'paynow/checkout/success'
+                    ) ?>?paymentStatus=' + json.payment_status + '&paymentId=' + json.paymentId);
+                }
+            });
+    }, 5000);
+</script>
