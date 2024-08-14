@@ -5,6 +5,7 @@ declare(strict_types=1);
 /** @var Escaper $escaper */
 /** @var Template $block */
 /** @var Card $magewire */
+
 /** @var Php $this */
 
 use Magento\Framework\Escaper;
@@ -14,13 +15,55 @@ use Snowdog\Hyva\Checkout\PayNow\Payment\Method\Card;
 
 ?>
 <div class="payment-method">
-    <div>CARD</div>
+    <div class="paynow-payment-options-card">
+        <span><?= __('Select a saved card or enter new card details:') ?></span>
+        <div>
+            <?php foreach ($magewire->getInstruments() as $instrument): ?>
+                <div id="wrapper-<?= $instrument['token'] ?>">
+                    <div class="paynow-payment-option-card <?php if ($magewire->token == $instrument['token']): ?> active<?php endif ?>"
+                         id="<?= $instrument['token'] ?>" wire:click="$set('token', '<?= $instrument['token'] ?>')">
+                        <div class="paynow-payment-card-image">
+                            <img src="<?= $instrument['image'] ?>" alt="<?= $instrument['brand'] ?>">
+                        </div>
+                        <div class="paynow-payment-card-details">
+                            <p class="paynow-payment-card-details-card-name<?php if ($instrument['isExpired']): ?> paynow-expired<?php endif ?>">
+                                <span><?= __('Card:') ?></span> <span><?= $instrument['name'] ?></span></p>
+                            <p class="paynow-payment-card-details-expiration<?php if ($instrument['isExpired']): ?> paynow-expired<?php endif ?>">
+                                <span><?= $instrument['isExpired'] ? __('Expired:') : __('Expires:') ?></span>
+                                <span><?= $instrument['expirationDate'] ?></span></p>
+                        </div>
+                        <div class="paynow-payment-card-menu">
+                            <button class="paynow-payment-card-menu-button" type="button" @click="removeCard('<?= $instrument['token'] ?>', '<?= $instrument['name'] ?>')"><?= __(
+                                    'remove'
+                                ) ?></button>
+                        </div>
+                    </div>
+                    <span class="paynow-payment-card-error"></span>
+                </div>
+            <?php endforeach ?>
+            <div class="paynow-payment-option-card  <?php if (empty($magewire->token)): ?> active<?php endif ?>"
+                 id="paynow-payment-option-card-create-new"
+                 wire:click="$set('token', '')">
+                <div class="paynow-payment-card-image">
+                    <img src="<?= $magewire->getDefaultCardImagePath() ?>" alt="<?= __('Card default icon') ?>">
+                </div>
+                <div class="paynow-payment-card-details">
+                    <p class="paynow-payment-card-details-card-name">
+                        <span><?= __('Enter your new card details') ?></span>
+                    </p>
+                    <p class="paynow-payment-card-details-expiration">
+                        <span><?= __('You can save it in the next step') ?></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="paynow-data-processing-info">
-        <?php foreach($magewire->getGdprNotices() as $notice): ?>
+        <?php foreach ($magewire->getGdprNotices() as $notice): ?>
             <div class="paynow-data-processing-info" x-data="{ expanded: false }">
                 <span><?= $notice['title'] ?></span>
-                <?php if($notice['content']): ?>
+                <?php if ($notice['content']): ?>
                     <a class="expand" @click="expanded = ! expanded"><?= __('Read more') ?></a>
                     <div x-show="expanded" class="paynow-data-processing-info-more">
                         <p><?= $notice['content'] ?></p>
@@ -29,4 +72,33 @@ use Snowdog\Hyva\Checkout\PayNow\Payment\Method\Card;
             </div>
         <?php endforeach ?>
     </div>
+
+    <script>
+        function removeCard(token, name) {
+            if (confirm("<?= __('Do You want to remove card ') ?>" + name + "?")) {
+
+                var data = new FormData();
+                data.append("json", JSON.stringify({'savedInstrumentToken': token}));
+
+                fetch(
+                    "<?= $block->getUrl('paynow/payment/removeInstrument') ?>",
+                    {
+                        method: "POST",
+                        body: data
+                    }
+                )
+                    .then(function () {
+                        Magewire.find('checkout.payment.method.paynow_card_gateway').refresh()
+                    })
+
+            }
+        }
+
+        import('https://static.paynow.pl/scripts/PyG5QjFDUI.min.js')
+            .then(FingerprintJS => FingerprintJS.load())
+            .then(fp => fp.get())
+            .then(result => {
+                Magewire.find('checkout.payment.method.paynow_card_gateway').set('fingerprint', result.visitorId);
+            })
+    </script>
 </div>

@@ -16,9 +16,9 @@ class Gateway extends Component implements EvaluationInterface
     public ?string $method = '';
 
     public function __construct(
-        private readonly GDPRHelper $gdpr,
-        private readonly PaymentMethodsHelper $methods,
-        private readonly Session $checkoutSession,
+        private readonly GDPRHelper              $gdpr,
+        private readonly PaymentMethodsHelper    $methods,
+        private readonly Session                 $checkoutSession,
         private readonly CartRepositoryInterface $quoteRepository,
     ) {
     }
@@ -41,18 +41,24 @@ class Gateway extends Component implements EvaluationInterface
         $grandTotal = $this->checkoutSession->getQuote()->getGrandTotal();
         $currencyCode = $this->checkoutSession->getQuote()->getCurrency()->getQuoteCurrencyCode();
 
-        if ($this->id = 'checkout.payment.method.paynow_pbl_gateway') {
-            return $this->methods->getPblPaymentMethods($currencyCode, $grandTotal);
-        } else {
-            return $this->methods->getAvailable($currencyCode, $grandTotal);
-        }
+        return match ($this->id) {
+            'checkout.payment.method.paynow_digital_wallet_gateway' => $this->methods->getDigitalWalletsPaymentMethods(
+                $currencyCode,
+                $grandTotal
+            ),
+            'checkout.payment.method.paynow_pbl_gateway' => $this->methods->getPblPaymentMethods(
+                $currencyCode,
+                $grandTotal
+            ),
+            default => $this->methods->getAvailable($currencyCode, $grandTotal),
+        };
     }
 
     public function evaluateCompletion(EvaluationResultFactory $resultFactory): EvaluationResultInterface
     {
         if (!in_array(
             $this->checkoutSession->getQuote()->getPayment()->getMethod(),
-            ['paynow_pbl_gateway', 'paynow_gateway']
+            ['paynow_pbl_gateway', 'paynow_gateway', 'paynow_digital_wallet_gateway']
         )) {
             return $resultFactory->createSuccess();
         }
