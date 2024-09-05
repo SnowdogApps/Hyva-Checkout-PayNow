@@ -25,6 +25,9 @@
     <type name="Magento\Quote\Api\PaymentMethodManagementInterface">
         <plugin name="paynow_payment_methods_filter" type="Snowdog\Hyva\Checkout\PayNow\Plugin\AvailableMethodsFilterPlugin"/>
     </type>
+    <type name="Paynow\PaymentGateway\Helper\PaymentMethodsHelper">
+        <plugin name="paynow_get_payment_methods" type="Snowdog\Hyva\Checkout\PayNow\Plugin\PaymentMethodsHelperPlugin"/>
+    </type>
     <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
         <arguments>
             <argument name="compatModules" xsi:type="array">
