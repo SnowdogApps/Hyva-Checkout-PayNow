@@ -16,4 +16,13 @@ class PaymentMethodsHelperPlugin
 
         return $result;
     }
+
+    public function afterGetPblPaymentMethods(PaymentMethodsHelper $subject, ?array $result): array
+    {
+        if (is_null($result)) {
+            return [];
+        }
+
+        return $result;
+    }
 }
