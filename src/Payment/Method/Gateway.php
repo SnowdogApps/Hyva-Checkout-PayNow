@@ -64,7 +64,9 @@ class Gateway extends Component implements EvaluationInterface
         }
 
         if (empty($this->method)) {
-            return $resultFactory->createBlocking(__('Payment method not selected'));
+            return $resultFactory->createErrorMessageEvent()
+                ->withCustomEvent('payment:method:error')
+                ->withMessage('Payment method not selected.');
         }
 
         $quote = $this->checkoutSession->getQuote();

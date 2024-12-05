@@ -42,7 +42,9 @@ class Blik extends Component implements EvaluationInterface
         }
 
         if (empty($this->blikCode)) {
-            return $resultFactory->createBlocking(__('Enter BLIK Code'));
+            return $resultFactory->createErrorMessageEvent()
+                ->withCustomEvent('payment:method:error')
+                ->withMessage('Enter BLIK Code.');
         }
 
         $grandTotal = $this->checkoutSession->getQuote()->getGrandTotal();
