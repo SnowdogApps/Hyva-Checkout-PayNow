@@ -46,7 +46,9 @@ class Blik extends Component implements EvaluationInterface
             $quote->getPayment()->setAdditionalInformation('blik_code', $this->blikCode);
             $this->quoteRepository->save($quote);
 
-            return $resultFactory->createBlocking();
+            return $resultFactory->createErrorMessageEvent()
+            ->withCustomEvent('payment:method:error')
+            ->withMessage('Enter BLIK Code.');
         }
 
         $grandTotal = $this->checkoutSession->getQuote()->getGrandTotal();
