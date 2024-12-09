@@ -37,15 +37,11 @@ class Blik extends Component implements EvaluationInterface
 
     public function evaluateCompletion(EvaluationResultFactory $resultFactory): EvaluationResultInterface
     {
-        $quote = $this->checkoutSession->getQuote();
-        if ($quote->getPayment()->getMethod() != 'paynow_blik_gateway') {
+        if ($this->checkoutSession->getQuote()->getPayment()->getMethod() != 'paynow_blik_gateway') {
             return $resultFactory->createSuccess();
         }
 
         if (empty($this->blikCode)) {
-            $quote->getPayment()->setAdditionalInformation('blik_code', $this->blikCode);
-            $this->quoteRepository->save($quote);
-
             return $resultFactory->createErrorMessageEvent()
                 ->withCustomEvent('payment:method:error')
                 ->withMessage('Enter BLIK Code.');
