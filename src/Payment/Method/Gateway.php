@@ -69,6 +69,13 @@ class Gateway extends Component implements EvaluationInterface
                 ->withMessage('Payment method not selected.');
         }
 
+        $availableIds = array_column($this->getMethods(), 'id');
+        if (!in_array($this->method, $availableIds)) {
+            return $resultFactory->createErrorMessageEvent()
+                ->withCustomEvent('payment:method:error')
+                ->withMessage('Payment method not selected.');
+        }
+
         $quote = $this->checkoutSession->getQuote();
         $quote->getPayment()->setAdditionalInformation('payment_method_id', $this->method);
         $this->quoteRepository->save($quote);
