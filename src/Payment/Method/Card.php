@@ -95,7 +95,7 @@ class Card extends Component implements EvaluationInterface
 
         if ($cardPaymentMethod) {
             $quote = $this->checkoutSession->getQuote();
-            $quote->getPayment()->setAdditionalInformation('payment_method_id', 1234); // $cardPaymentMethod->getId());
+            $quote->getPayment()->setAdditionalInformation('payment_method_id', $cardPaymentMethod->getId());
             $quote->getPayment()->setAdditionalInformation('payment_method_token', $this->token);
             $quote->getPayment()->setAdditionalInformation('payment_method_fingerprint', $this->fingerprint);
             $this->quoteRepository->save($quote);
