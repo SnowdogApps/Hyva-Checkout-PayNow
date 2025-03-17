@@ -16,7 +16,8 @@ use Paynow\PaymentGateway\Helper\PaymentMethodsHelper;
 class PayPo extends Component implements EvaluationInterface
 {
     public function __construct(
-        private readonly GDPRHelper $gdpr
+        private readonly GDPRHelper $gdpr,
+        private readonly PaymentMethodsHelper $methods,
     ) {
     }
 
@@ -30,6 +31,18 @@ class PayPo extends Component implements EvaluationInterface
         $quote = $this->checkoutSession->getQuote();
         if ($quote->getPayment()->getMethod() != 'paynow_paypo_gateway') {
             return $resultFactory->createSuccess();
+        }
+
+        $grandTotal = $this->checkoutSession->getQuote()->getGrandTotal();
+        $currencyCode = $this->checkoutSession->getQuote()->getCurrency()->getQuoteCurrencyCode();
+        $paypoPaymentMethod = $this->methods->getPaypoPaymentMethod($currencyCode, $grandTotal);
+
+        if ($paypoPaymentMethod) {
+            $quote = $this->checkoutSession->getQuote();
+            $quote->getPayment()->setAdditionalInformation('payment_method_id', $paypoPaymentMethod->getId());
+            $this->quoteRepository->save($quote);
+        } else {
+            return $resultFactory->createBlocking(__('PayPo payment not allowed'));
         }
 
         return $resultFactory->createSuccess();
