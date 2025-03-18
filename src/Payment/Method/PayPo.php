@@ -17,7 +17,9 @@ class PayPo extends Component implements EvaluationInterface
 {
     public function __construct(
         private readonly GDPRHelper $gdpr,
+        private readonly Session $checkoutSession,
         private readonly PaymentMethodsHelper $methods,
+        private readonly CartRepositoryInterface $quoteRepository,
     ) {
     }
 
@@ -42,7 +44,9 @@ class PayPo extends Component implements EvaluationInterface
             $quote->getPayment()->setAdditionalInformation('payment_method_id', $paypoPaymentMethod->getId());
             $this->quoteRepository->save($quote);
         } else {
-            return $resultFactory->createBlocking(__('PayPo payment not allowed'));
+            return $resultFactory->createErrorMessageEvent()
+                ->withCustomEvent('payment:method:error')
+                ->withMessage('PayPo payment not allowed.');
         }
 
         return $resultFactory->createSuccess();
