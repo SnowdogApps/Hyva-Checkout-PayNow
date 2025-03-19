@@ -66,6 +66,17 @@ class AvailableMethodsFilterPlugin
                             $this->configHelper->getPaymentMethodsToHide()
                         );
                     break;
+                case "paynow_paypo_gateway":
+                    $paypoPaymentMethod = $this->paymentMethodsHelper->getPaypoPaymentMethod($currencyCode, $grandTotal);
+                    $isActive = $this->configHelper->isActive()
+                        && $this->configHelper->isConfigured()
+                        && $paypoPaymentMethod
+                        && $paypoPaymentMethod->isEnabled()
+                        && !in_array(
+                            PaymentMethodsToHide::PAYMENT_TYPE_TO_CONFIG_MAP[$paypoPaymentMethod->getType()],
+                            $this->configHelper->getPaymentMethodsToHide()
+                        );
+                    break;
                 case "paynow_digital_wallet_gateway":
                     $isActive = $this->configHelper->isActive() &&
                         $this->configHelper->isConfigured() &&
