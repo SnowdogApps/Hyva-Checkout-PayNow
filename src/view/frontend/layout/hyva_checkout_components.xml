@@ -75,6 +75,20 @@
                     </argument>
                 </arguments>
             </block>
+            <block name="checkout.payment.method.paynow_paypo_gateway"
+                   as="paynow_paypo_gateway"
+                   template="Snowdog_HyvaCheckoutPayNow::component/payment/method/paypo.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Snowdog\Hyva\Checkout\PayNow\Payment\Method\PayPo
+                    </argument>
+                    <argument name="metadata" xsi:type="array">
+                        <item name="subtitle" xsi:type="string" translate="true">
+                            Pay with PayPo
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
         </referenceBlock>
     </body>
 </page>
