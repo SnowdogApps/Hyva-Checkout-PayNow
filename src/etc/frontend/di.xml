@@ -19,6 +19,9 @@
                 <item name="paynow_digital_wallet_gateway"
                       xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
                 </item>
+                <item name="paynow_paypo_gateway"
+                      xsi:type="object">Snowdog\Hyva\Checkout\PayNow\Service\PlaceOrderServiceProvider
+                </item>
             </argument>
         </arguments>
     </type>
